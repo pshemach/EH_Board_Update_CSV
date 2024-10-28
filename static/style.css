@@ -1,0 +1,148 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Background Gradient */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #b3e5fc, #ce93d8);
+  color: #333;
+}
+
+/* Centered Container Styling */
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+}
+
+/* Heading */
+h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Instruction Text */
+p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* File Input */
+.file-input {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+label {
+  display: inline-block;
+  background-color: #673ab7;
+  color: white;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+label:hover {
+  background-color: #5e35b1;
+}
+
+#file-name {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Buttons */
+button,
+#download-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #4caf50;
+}
+
+button:hover {
+  background-color: #43a047;
+}
+
+#download-btn {
+  background-color: #2196f3;
+  text-decoration: none;
+  text-align: center;
+}
+
+#download-btn:hover {
+  background-color: #1e88e5;
+}
+
+/* Hidden State */
+.hidden {
+  display: none;
+}
+
+/* Progress Bar */
+#progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0;
+  background-color: #4caf50;
+  transition: width 0.4s ease;
+}
+
+#progress-text {
+  font-size: 0.85rem;
+  color: #4caf50;
+  margin-top: 0.5rem;
+}

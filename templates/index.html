@@ -3,20 +3,126 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
-    />
-    <title>Board Identify - CSV Processor</title>
+    <title>CSV Processor</title>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
     <div class="container">
-      <h1>Board Type Identifier</h1>
-      <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileInput" accept=".csv" required />
-        <br />
-        <button type="submit">Upload and Process</button>
-      </form>
+      <h1>CSV Processor</h1>
+      <p>
+        Select your CSV file and click "Upload & Process" to start processing.
+      </p>
+
+      <div class="file-input">
+        <input type="file" id="csv-file" accept=".csv" />
+        <label for="csv-file">Choose File</label>
+        <span id="file-name">No file chosen</span>
+      </div>
+
+      <button onclick="uploadFile()" id="upload-btn">Upload & Process</button>
+
+      <div id="progress-container" class="hidden">
+        <div id="progress-bar"></div>
+        <span id="progress-text">Processing...</span>
+      </div>
+
+      <!-- Download button is hidden initially and only shown after processing -->
+      <button
+        id="download-btn"
+        class="hidden"
+        onclick="validateDownload(event)"
+      >
+        Download Processed File
+      </button>
     </div>
+
+    <script>
+      const fileInput = document.getElementById("csv-file");
+      const fileNameDisplay = document.getElementById("file-name");
+      const downloadBtn = document.getElementById("download-btn");
+
+      let downloadUrl = ""; // Store the download URL
+      let fileId = ""; // Store the file ID for deletion
+
+      // Display selected file name and reset download button state
+      fileInput.addEventListener("change", () => {
+        fileNameDisplay.textContent = fileInput.files[0].name;
+        downloadBtn.classList.add("hidden"); // Hide download button until processing completes
+      });
+
+      async function uploadFile() {
+        const file = fileInput.files[0];
+        const progressBar = document.getElementById("progress-bar");
+        const progressContainer = document.getElementById("progress-container");
+        const progressText = document.getElementById("progress-text");
+
+        // Check if a file is selected
+        if (!file) {
+          alert("Please select a CSV file before uploading.");
+          return;
+        }
+
+        // Show the progress bar and hide download button initially
+        progressContainer.classList.remove("hidden");
+        downloadBtn.classList.add("hidden");
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const response = await fetch("/upload_csv", {
+            method: "POST",
+            body: formData,
+          });
+
+          // Parse JSON response with download URL
+          const data = await response.json();
+          if (!response.ok) {
+            alert("Error: " + data.error);
+            progressContainer.classList.add("hidden");
+            return;
+          }
+
+          // Set file ID and download URL
+          fileId = data.file_id;
+          downloadUrl = data.download_url;
+          downloadBtn.classList.remove("hidden"); // Show download button after processing
+
+          // Simulate progress bar completion
+          progressBar.style.width = "100%";
+          progressText.textContent = "Completed!";
+          progressContainer.classList.add("hidden"); // Hide progress bar
+        } catch (error) {
+          alert("An error occurred: " + error.message);
+          progressContainer.classList.add("hidden"); // Hide progress bar if error occurs
+        }
+      }
+
+      async function validateDownload(event) {
+        if (!downloadUrl) {
+          event.preventDefault(); // Prevent download if downloadUrl is not set
+          alert("Please upload and process a file before downloading.");
+          return;
+        }
+
+        // Open the download link in a new tab
+        window.open(downloadUrl, "_blank");
+
+        // Call the delete route to remove the file after download is triggered
+        try {
+          const response = await fetch(`/delete_file/${fileId}`, {
+            method: "POST",
+          });
+          const result = await response.json();
+          if (result.success) {
+            console.log("File deleted successfully.");
+          } else {
+            console.error("Error deleting file:", result.error);
+          }
+        } catch (error) {
+          console.error("Error during file deletion:", error);
+        }
+      }
+    </script>
   </body>
 </html>

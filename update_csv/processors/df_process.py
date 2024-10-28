@@ -18,8 +18,8 @@ def process_df(df):
             proc_df["Prediction"] = preds
             proc_df["Prediction"] = proc_df["Prediction"].apply(remove_brackets)
 
-            csv_name = f"{OUTPUT_FOLDER}/output_{i}.csv"
-            proc_df.to_csv(csv_name, index=False)
-            return csv_name
+            csv_path= f"{OUTPUT_FOLDER}/output_{i}.csv"
+            proc_df.to_csv(csv_path, index=False)
+            return csv_path
     except Exception as e:
         raise Exception(f"Error processing CSV file: {str(e)}")
