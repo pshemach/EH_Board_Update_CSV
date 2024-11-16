@@ -1,4 +1,11 @@
-from flask import Flask, request, jsonify, send_file, render_template, after_this_request
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    send_file,
+    render_template,
+    after_this_request,
+)
 import os
 import time
 from update_csv.processors.df_process import process_df
@@ -10,12 +17,11 @@ app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 
-make_dir(UPLOAD_FOLDER)
-make_dir(OUTPUT_FOLDER)
 
 @app.route("/")
 def index():
     return render_template("index.html")  # Serve the HTML UI
+
 
 @app.route("/upload_csv", methods=["POST"])
 def upload_csv():
@@ -45,9 +51,15 @@ def upload_csv():
             return response
 
         # Return JSON metadata, not the file itself
-        return jsonify({"download_url": f"/download_file/{output_file_id}", "file_id": output_file_id})
+        return jsonify(
+            {
+                "download_url": f"/download_file/{output_file_id}",
+                "file_id": output_file_id,
+            }
+        )
 
     return jsonify({"error": "Invalid file format. Please upload a CSV file."}), 400
+
 
 @app.route("/download_file/<file_id>", methods=["GET"])
 def download_file(file_id):
@@ -68,5 +80,8 @@ def download_file(file_id):
 
     return send_file(output_file_path, mimetype="text/csv", as_attachment=True)
 
+
 if __name__ == "__main__":
+    make_dir(UPLOAD_FOLDER)
+    make_dir(OUTPUT_FOLDER)
     app.run(host="0.0.0.0", port=5150, debug=True)

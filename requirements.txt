@@ -1,5 +1,7 @@
+ipykernel
 pandas
 numpy
 requests
 Flask
+tqdm
 -e .
